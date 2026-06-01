@@ -30,8 +30,8 @@ describe('escapeXml', () => {
 
 describe('deriveBaseUri', () => {
   it('converts name to lowercase slug', () => {
-    expect(deriveBaseUri('Cosmic Coffee Company')).toBe(
-      'http://example.org/ontology/cosmic-coffee-company/',
+    expect(deriveBaseUri('Fourth Coffee')).toBe(
+      'http://example.org/ontology/fourth-coffee/',
     );
   });
 

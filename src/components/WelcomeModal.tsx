@@ -23,7 +23,7 @@ export function WelcomeModal({ onClose }: WelcomeModalProps) {
           <div className="modal-logo">☕</div>
           <h1 className="modal-title">Welcome to Ontology Playground (Preview)</h1>
           <p className="modal-subtitle">
-            Explore Microsoft Fabric IQ Ontology through the lens of Cosmic Coffee Company
+            Explore Microsoft Fabric IQ Ontology through the lens of Fourth Coffee
           </p>
         </div>
 

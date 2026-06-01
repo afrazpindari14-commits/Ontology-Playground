@@ -87,6 +87,19 @@ No extra fields are allowed (`additionalProperties: false` in the schema).
 The `fabric_forum_user_name` and `author_linkedin` fields are **not** in the
 schema — omit them unless the schema is updated first.
 
+### 4a. Person names in examples or sample data
+
+If you create, repair, or normalize sample instances, examples, docs, quests, or
+RDF/OWL literals that need person names, first use the `name-generator` skill.
+Do not invent customer, employee, patient, student, instructor, reviewer, or
+other human names.
+
+All new person names must come from the `FullName` column in:
+
+```text
+data/reference/FNF-2026-06-01-01002-0268.csv
+```
+
 ### 5. Validate
 
 ```bash
@@ -131,3 +144,5 @@ npm run build
 - [ ] `npm run build` passes with no TypeScript or Vite errors
 - [ ] Entry appears in `public/catalogue.json` with correct `name`, `description`, `category`
 - [ ] `source` field in compiled entry is `"community"`
+- [ ] Any person names introduced while preparing the contribution came from the
+  `name-generator` skill / approved CSV fixture

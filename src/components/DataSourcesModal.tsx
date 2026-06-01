@@ -29,7 +29,7 @@ export function DataSourcesModal({ onClose }: DataSourcesModalProps) {
           <div>
             <h2 style={{ fontSize: 24, fontWeight: 600 }}>Data Sources</h2>
             <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginTop: 4 }}>
-              How the Cosmic Coffee ontology binds to OneLake
+              How the Fourth Coffee ontology binds to OneLake
             </p>
           </div>
           <button className="icon-btn" onClick={onClose}>

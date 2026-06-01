@@ -25,7 +25,7 @@ An ontology in this project has four parts:
 
 ```
 Ontology
-├── name            "Cosmic Coffee Company"
+├── name            "Fourth Coffee"
 ├── description     "A coffee shop chain with suppliers, products, stores…"
 ├── entityTypes[]   The concepts in your domain
 └── relationships[] How those concepts connect
@@ -225,7 +225,7 @@ Every catalogue ontology needs a `metadata.json` alongside the `.rdf` file:
 
 ```json
 {
-  "name": "Cosmic Coffee Company",
+  "name": "Fourth Coffee",
   "description": "A sample ontology representing a coffee shop chain with suppliers, products, stores, customers, and orders.",
   "icon": "☕",
   "category": "retail",

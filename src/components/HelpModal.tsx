@@ -87,7 +87,7 @@ export function HelpModal({ onClose }: HelpModalProps) {
               <strong style={{ color: 'var(--ms-blue)' }}>About Microsoft Fabric IQ Ontology</strong>
               <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, lineHeight: 1.5 }}>
                 An ontology is a shared, machine-understandable vocabulary of your business. It defines entity types (like Customer, Product), 
-                their properties, and relationships. This demo uses a fictional "Cosmic Coffee Company" to illustrate these concepts.
+                their properties, and relationships. This demo uses a fictional "Fourth Coffee" to illustrate these concepts.
               </p>
             </div>
           </div>
