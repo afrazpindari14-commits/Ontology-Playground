@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Ontology } from './ontology';
 import type { Quest, QuestStep } from './quests';
@@ -14,6 +14,20 @@ interface CatalogueEntry {
 
 interface CatalogueFile {
   entries: CatalogueEntry[];
+}
+
+function resolveCataloguePath(): string {
+  const candidates = [
+    resolve(process.cwd(), 'public/catalogue.json'),
+    resolve(process.cwd(), 'build/catalogue.json'),
+  ];
+
+  const found = candidates.find((candidate) => existsSync(candidate));
+  if (!found) {
+    throw new Error(`No catalogue.json found. Checked: ${candidates.join(', ')}`);
+  }
+
+  return found;
 }
 
 function validateQuestTargets(quests: Quest[], ontology: Ontology, context: string): string[] {
@@ -91,7 +105,7 @@ describe('quest target integrity', () => {
   });
 
   it('keeps generated quests valid for every catalogue ontology', () => {
-    const cataloguePath = resolve(process.cwd(), 'public/catalogue.json');
+    const cataloguePath = resolveCataloguePath();
     const rawCatalogue = readFileSync(cataloguePath, 'utf8');
     const catalogue = JSON.parse(rawCatalogue) as CatalogueFile;
 
