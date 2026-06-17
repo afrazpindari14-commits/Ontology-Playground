@@ -69,7 +69,7 @@ learning paths and hands-on labs:
 - **Ontology Fundamentals** — 6 articles covering core concepts (What is an
   Ontology? → RDF/OWL → Fabric IQ → Build Your First → Design Patterns →
   Contributing)
-- **7 Domain Learning Paths** — Cosmic Coffee, E-Commerce, Finance, Healthcare,
+- **7 Domain Learning Paths** — Fourth Coffee, E-Commerce, Finance, Healthcare,
   Manufacturing, University, and HR System. Each path has 4 progressive articles
   that build an ontology step-by-step, with live embedded graphs showing new
   entities at each stage.
@@ -129,7 +129,7 @@ Client-side hash routing with shareable URLs for every page:
 
 | Domain | Ontology | Entities | Relationships |
 |--------|----------|----------|---------------|
-| Retail | Cosmic Coffee Company | 6 | 7 |
+| Retail | Fourth Coffee | 6 | 7 |
 | E-Commerce | Online Retail | 5 | 6 |
 | Healthcare | Clinical System | 5 | 6 |
 | Finance | Banking & Finance | 5 | 6 |
@@ -235,9 +235,14 @@ Ontology-Playground/
 
 ## Documentation
 
+The table below lists the main end-user and contributor guides. Internal planning notes (for example, `docs/TODO-*.md`) are intentionally not part of the published documentation set.
+
 | Guide | Description |
 |-------|-------------|
 | [Ontology Authoring Guide](docs/authoring-guide.md) | How to create ontologies that work well in the Playground — field-by-field reference, best practices, and a step-by-step walkthrough |
+| [Contribute an Ontology: From Design to GitHub](docs/contributing-ontology-from-design-to-github.md) | End-to-end contributor workflow: design, RDF export, metadata, local validation, and pull request |
+| [Playground Feature Demo Guide](docs/playground-features-demo-guide.md) | Step-by-step demo script to showcase key Playground capabilities and connect them to Fabric IQ and Real-Time Intelligence |
+| [Ontology School Demo Guide](docs/ontology-school-demo-guide.md) | Step-by-step live demo plan for courses, embeds, quizzes, presentation mode, and learning workflow |
 | [Embedding Guide](docs/embed-guide.md) | How to embed interactive ontology widgets on any web page |
 | [GitHub OAuth Setup](docs/github-oauth-setup.md) | How to configure GitHub OAuth for one-click catalogue PRs |
 | [Embed Security](docs/embed-security.md) | Security model for the embeddable widget |
@@ -255,8 +260,10 @@ This repository includes Copilot customization files so agents can reliably:
 Included assets:
 
 - Skills:
-   - `.github/skills/ontology-catalog-import/`
-   - `.github/skills/ontology-school-path-generator/`
+   - `.github/skills/ontology-catalog-import/` — import external/customer RDF/OWL into catalogue format
+   - `.github/skills/ontology-school-path-generator/` — generate progressive Ontology School modules
+   - `.github/skills/community-ontology-contribution/` — add a contributor ontology under `catalogue/community/` with the correct directory structure, metadata, and validation
+   - `.github/skills/name-generator/` — generate person names for examples, demos, quests, tests, and sample data from the approved CSV fixture
 - RDF intake instruction:
    - `.github/instructions/rdf-intake.instructions.md`
 - Reusable prompts:

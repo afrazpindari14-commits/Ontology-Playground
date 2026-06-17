@@ -16,6 +16,7 @@ const dom = new JSDOM();
 
 import { parseRDF } from '../src/lib/rdf/parser';
 import { validateOntology } from '../src/store/designerStore';
+import { validateOntologyStyle } from './style-validator';
 import { cosmicCoffeeOntology } from '../src/data/ontology';
 import { sampleOntologies } from '../src/data/sampleOntologies';
 import { existsSync, readdirSync, readFileSync, statSync } from 'fs';
@@ -33,11 +34,34 @@ function report(label: string, errors: { message: string }[]) {
   }
 }
 
-function validateRdfFile(filePath: string) {
+function reportStyle(label: string, errors: { message: string; severity: string }[]) {
+  if (errors.length) {
+    const hasErrors = errors.some(e => e.severity === 'error');
+    if (hasErrors) {
+      failures++;
+      console.log(`FAIL  ${label} (style)`);      
+    } else {
+      console.log(`WARN  ${label} (style)`);
+    }
+    for (const e of errors) {
+      const prefix = e.severity === 'error' ? '  ✘' : '  ⚠';
+      console.log(`${prefix} ${e.message}`);
+    }
+  }
+}
+
+function validateRdfFile(filePath: string, checkStyle = true) {
   const rdf = readFileSync(filePath, 'utf-8');
   const { ontology } = parseRDF(rdf);
   const errors = validateOntology(ontology);
   report(basename(filePath), errors);
+  
+  if (checkStyle) {
+    const styleErrors = validateOntologyStyle(ontology);
+    if (styleErrors.length > 0) {
+      reportStyle(basename(filePath), styleErrors);
+    }
+  }
 }
 
 // --- Mode: validate specific files passed as CLI args ---
@@ -55,7 +79,7 @@ if (args.length > 0) {
   // --- Mode: validate all built-in + catalogue ontologies ---
 
   // 1. Built-in TS ontology objects
-  report('Cosmic Coffee (built-in)', validateOntology(cosmicCoffeeOntology));
+  report('Fourth Coffee (built-in)', validateOntology(cosmicCoffeeOntology));
   for (const s of sampleOntologies) {
     report(`${s.name} (built-in)`, validateOntology(s.ontology));
   }
@@ -77,8 +101,12 @@ if (args.length > 0) {
     for (const user of readdirSync(communityDir)) {
       const userDir = join(communityDir, user);
       if (!statSync(userDir).isDirectory()) continue;
-      for (const f of readdirSync(userDir).filter(f => f.endsWith('.rdf'))) {
-        validateRdfFile(join(userDir, f));
+      for (const slug of readdirSync(userDir)) {
+        const slugDir = join(userDir, slug);
+        if (!statSync(slugDir).isDirectory()) continue;
+        for (const f of readdirSync(slugDir).filter(f => f.endsWith('.rdf') || f.endsWith('.owl'))) {
+          validateRdfFile(join(slugDir, f));
+        }
       }
     }
   }

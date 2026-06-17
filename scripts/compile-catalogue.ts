@@ -11,6 +11,7 @@ import { join, basename } from 'node:path';
 import { JSDOM } from 'jsdom';
 import { parseRDF } from '../src/lib/rdf/parser.js';
 import { serializeToRDF } from '../src/lib/rdf/serializer.js';
+import { validateOntologyStyle } from './style-validator.js';
 import type { CatalogueEntry, Catalogue } from '../src/types/catalogue.js';
 
 // Provide DOMParser for the RDF parser (browser API not available in Node)
@@ -175,6 +176,22 @@ function compile(): Catalogue {
         console.error(`✘ ${rdfPath}: round-trip verification failed — ${(e as Error).message}`);
         errors++;
         continue;
+      }
+
+      // Style validation: check naming conventions and spelling
+      const styleErrors = validateOntologyStyle(ontology);
+      if (styleErrors.length > 0) {
+        for (const styleError of styleErrors) {
+          if (styleError.severity === 'error') {
+            console.error(`✘ ${rdfPath}: ${styleError.message} (in "${styleError.label}")`);
+            errors++;
+          } else {
+            console.warn(`⚠ ${rdfPath}: ${styleError.message} (in "${styleError.label}")`);
+          }
+        }
+        if (styleErrors.some(e => e.severity === 'error')) {
+          continue;
+        }
       }
 
       seenIds.add(entryId);

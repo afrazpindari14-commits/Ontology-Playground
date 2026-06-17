@@ -1,12 +1,28 @@
+import { useRef, useEffect } from 'react';
 import { useAppStore } from '../store/appStore';
 import { Database, ArrowRight, Key, Link2, Layers, Box, GitBranch } from 'lucide-react';
 
 export function InspectorPanel() {
   const { currentOntology, dataBindings, selectedEntityId, selectedRelationshipId, showDataBindings, activeQuest, currentStepIndex, advanceQuestStep } = useAppStore();
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const tryAdvancePropertyQuestStep = (propertyName: string) => {
+    if (!activeQuest) return;
+    const currentStep = activeQuest.steps[currentStepIndex];
+    if (currentStep.targetType === 'property' && currentStep.targetId === propertyName) {
+      advanceQuestStep();
+    }
+  };
+
+  useEffect(() => {
+    if ((selectedEntityId || selectedRelationshipId) && panelRef.current) {
+      panelRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedEntityId, selectedRelationshipId]);
 
   if (!selectedEntityId && !selectedRelationshipId) {
     return (
-      <div className="inspector-panel">
+      <div ref={panelRef} className="inspector-panel">
         <div className="panel-header">
           <h3 className="panel-title">Inspector</h3>
         </div>
@@ -29,7 +45,7 @@ export function InspectorPanel() {
     const toEntity = currentOntology.entityTypes.find(e => e.id === relationship.to);
 
     return (
-      <div className="inspector-panel">
+      <div ref={panelRef} className="inspector-panel">
         <div className="panel-header">
           <h3 className="panel-title">Relationship</h3>
         </div>
@@ -99,7 +115,7 @@ export function InspectorPanel() {
   );
 
   return (
-    <div className="inspector-panel">
+    <div ref={panelRef} className="inspector-panel">
       <div className="panel-header">
         <h3 className="panel-title">Entity Type</h3>
       </div>
@@ -121,14 +137,7 @@ export function InspectorPanel() {
           </div>
           <div className="property-list">
             {entity.properties.map(prop => (
-              <div key={prop.name} className="property-item" style={{ cursor: 'pointer' }} onClick={() => {
-                if (activeQuest) {
-                  const currentStep = activeQuest.steps[currentStepIndex];
-                  if (currentStep.targetType === 'property' && currentStep.targetId === prop.name) {
-                    advanceQuestStep();
-                  }
-                }
-              }}>
+              <div key={prop.name} className="property-item" style={{ cursor: 'pointer' }} onClick={() => tryAdvancePropertyQuestStep(prop.name)}>
                 <div>
                   <span className="property-name">{prop.name}</span>
                   {prop.isIdentifier && <span className="property-identifier">ID</span>}
@@ -152,23 +161,23 @@ export function InspectorPanel() {
               const otherEntity = currentOntology.entityTypes.find(e => e.id === otherEntityId);
               
               return (
-                <div key={rel.id} className="property-item">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div key={rel.id} className="property-item rel-item">
+                  <div className="rel-item-row">
                     {isOutgoing ? (
                       <>
                         <span className="property-name">{rel.name}</span>
-                        <ArrowRight size={14} style={{ color: 'var(--ms-blue)' }} />
-                        <span>{otherEntity?.icon} {otherEntity?.name}</span>
+                        <ArrowRight size={12} className="rel-item-arrow" />
+                        <span className="rel-item-entity">{otherEntity?.icon} {otherEntity?.name}</span>
                       </>
                     ) : (
                       <>
-                        <span>{otherEntity?.icon} {otherEntity?.name}</span>
-                        <ArrowRight size={14} style={{ color: 'var(--ms-blue)' }} />
+                        <span className="rel-item-entity">{otherEntity?.icon} {otherEntity?.name}</span>
+                        <ArrowRight size={12} className="rel-item-arrow" />
                         <span className="property-name">{rel.name}</span>
                       </>
                     )}
                   </div>
-                  <span className="property-type">{rel.cardinality}</span>
+                  <div className="rel-item-cardinality">{rel.cardinality}</div>
                 </div>
               );
             })}
@@ -193,7 +202,12 @@ export function InspectorPanel() {
               </div>
               <div>
                 {Object.entries(binding.columnMappings).map(([prop, column]) => (
-                  <div key={prop} className="column-mapping">
+                  <div
+                    key={prop}
+                    className="column-mapping"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => tryAdvancePropertyQuestStep(prop)}
+                  >
                     <span className="column-property">{prop}</span>
                     <span className="column-arrow">→</span>
                     <span className="column-source">{column}</span>
