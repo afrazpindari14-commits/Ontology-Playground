@@ -248,6 +248,7 @@ The table below lists the main end-user and contributor guides. Internal plannin
 | [Embed Security](docs/embed-security.md) | Security model for the embeddable widget |
 | [Learning Content Guide](docs/learn-content-guide.md) | How to author courses, articles, quizzes, and ontology embeds for the Ontology School |
 | [Ontology School Review Workflow](docs/ontology-school-review-workflow.md) | Human review and approval flow for school lesson content |
+| [Theme Authoring Guide](docs/theme-authoring-guide.md) | How to plug a new color theme into the Playground — token contract, the appStore + CSS steps, and contrast gotchas |
 
 ## AI Agent Quickstart
 
