@@ -16,6 +16,7 @@
     "secrets:scan": "gitleaks detect --source . --redact --config .gitleaks.toml",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:a11y": "vitest run src/a11y",
     "validate": "tsx scripts/validate-rdf.ts",
     "preview:ontology:list": "tsx scripts/list-changed-catalogue-entries.ts",
     "preview:ontology:render": "tsx scripts/render-ontology-previews.ts",
