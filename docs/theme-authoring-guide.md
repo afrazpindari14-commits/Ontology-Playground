@@ -75,6 +75,7 @@ over it).
 | --- | --- | --- |
 | Accent | `--ms-blue`, `--ms-blue-dark`, `--ms-blue-light`, `--info` | Primary accent used across buttons, links, highlights. Override these to re-brand the accent color. |
 | Accent foreground | `--on-accent` | Text/icon color placed **on** an accent-colored fill (e.g. `.btn-primary`). Must clear 4.5:1 against `--ms-blue`. White suits a dark accent; a **light** accent (e.g. Aurora's mint) needs a **dark** value. Inherited from `:root` (white) unless overridden. |
+| Stat tiles | `--stat-blue`, `--stat-green`, `--stat-purple` | Icon + value color for the Ontology-Insights metric tiles, which lay a translucent tint over `--bg-secondary`. Each must clear **3:1** against its composited tile. Dark-based themes inherit the **bright** `:root` set; light-based themes inherit the **darker** `.light-theme` set — override only if your sidebar uses an unusual background. |
 | Surfaces | `--bg-primary`, `--bg-secondary`, `--bg-tertiary`, `--bg-elevated` | Page and panel backgrounds, lightest → most elevated. |
 | Text | `--text-primary`, `--text-secondary`, `--text-tertiary` | Foreground text, primary → muted. |
 | Borders | `--border-color`, `--border-subtle` | Panel/control borders. |
@@ -266,6 +267,10 @@ themes, so a new theme or a token tweak can't silently ship a failing color:
   against the opaque `--graph-edge-label-bg` chip.
 - **Graph edge lines** (`--graph-edge-color`) are graphical objects and need
   **3:1** against `--graph-bg` (SC 1.4.11 Non-text Contrast).
+- **Stat-card tiles** — the metric icons and bold values (`--stat-blue`,
+  `--stat-green`, `--stat-purple`) are graphical objects / large text and need
+  **3:1** against the translucent tile, composited over `--bg-secondary`. Keep
+  the icons at full opacity (a `0.7` fade drops them below the floor).
 
 Thresholds are floors — `4.49:1` fails.
 

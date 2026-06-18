@@ -25,6 +25,11 @@
   --border-subtle: #333333;
   /* Foreground for accent-colored fills (e.g. buttons on var(--ms-blue)) */
   --on-accent: #FFFFFF;
+  /* Stat-card metric icon/value foregrounds — WCAG 2.1 AA (>=3:1) on the
+     translucent tiles over a dark sidebar (dark + aurora themes). */
+  --stat-blue: #5CB0F2;
+  --stat-green: #3FB950;
+  --stat-purple: #C4A2F0;
   
   /* Semantic Colors */
   --success: #107C10;
@@ -78,6 +83,10 @@
   --text-tertiary: #666666;
   --border-color: #C0C0C0;
   --border-subtle: #D8D8D8;
+  /* Stat-card foregrounds for a light sidebar (light + crimson themes). */
+  --stat-blue: #0067C0;
+  --stat-green: #107C10;
+  --stat-purple: #7A3FBF;
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
@@ -3814,12 +3823,12 @@ body {
 }
 
 .stat-card-icon {
-  opacity: 0.7;
+  opacity: 1;
 }
 
-.stat-card--blue .stat-card-icon { color: var(--ms-blue); }
-.stat-card--purple .stat-card-icon { color: #8a52d4; }
-.stat-card--green .stat-card-icon { color: var(--ms-green-light); }
+.stat-card--blue .stat-card-icon { color: var(--stat-blue); }
+.stat-card--purple .stat-card-icon { color: var(--stat-purple); }
+.stat-card--green .stat-card-icon { color: var(--stat-green); }
 
 .stat-card-value {
   font-size: 22px;
@@ -3827,9 +3836,9 @@ body {
   line-height: 1;
 }
 
-.stat-card--blue .stat-card-value { color: var(--ms-blue); }
-.stat-card--purple .stat-card-value { color: #8a52d4; }
-.stat-card--green .stat-card-value { color: var(--ms-green-light); }
+.stat-card--blue .stat-card-value { color: var(--stat-blue); }
+.stat-card--purple .stat-card-value { color: var(--stat-purple); }
+.stat-card--green .stat-card-value { color: var(--stat-green); }
 
 .stat-card-label {
   font-size: 10px;
