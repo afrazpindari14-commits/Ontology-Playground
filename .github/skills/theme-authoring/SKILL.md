@@ -57,7 +57,10 @@ Make all edits in [`src/store/appStore.ts`](../../../src/store/appStore.ts) and
   **dark** value for a **light** accent (white fails on Aurora's mint) and white
   for a dark accent. Edge text must clear 4.5:1 against `--graph-edge-label-bg`.
   Stat-tile icons/values (`--stat-blue/green/purple`) need 3:1 over the tint and
-  cascade automatically (bright from `:root`, dark from `.light-theme`).
+  cascade automatically (bright from `:root`, dark from `.light-theme`). Amber
+  text/icons use `--ms-yellow-fg` (bright `#FFB900` on dark, dark gold `#8A6A00`
+  on light); the `.progress-fill` stops `--progress-from`/`--progress-to` each
+  need 3:1 on the `--bg-tertiary` track.
   `npm run test:a11y` enforces this for every theme. (Guide → Accessibility.)
 - **Register dark themes** in `DARK_BASED_THEMES` so `darkMode` is correct
   (graph fallback, label backplate, PNG export bg).

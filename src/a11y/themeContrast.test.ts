@@ -112,3 +112,73 @@ describe('WCAG 2.1 AA stat-card tiles (SC 1.4.11 / 1.4.3)', () => {
     });
   }
 });
+
+// ── Amber foreground token (--ms-yellow-fg) ──────────────────────────────────
+// #FFB900 reads on the dark themes but fails on light surfaces (~1.7:1), so the
+// light themes override it to a darker gold. It colors text + icons: header
+// points/badges (.stat-value), quest points, the pathfinder warning message,
+// and the active designer ID toggle. Guard it as normal text (4.5:1) against
+// every surface it lands on, including the translucent amber warn tile.
+const WARN_TINT = 'rgba(255, 185, 0, 0.1)'; // .pathfinder-message--warn / .designer-id-btn.active
+
+describe('WCAG 2.1 AA amber foreground (SC 1.4.3)', () => {
+  for (const theme of THEMES) {
+    const tokens = getThemeTokens(theme);
+
+    describe(theme, () => {
+      const fg = tokens['--ms-yellow-fg'];
+      const surfaces: { name: string; bg: string }[] = [
+        { name: 'panel', bg: tokens['--bg-secondary'] },
+        { name: 'elevated surface', bg: tokens['--bg-elevated'] },
+        { name: 'app background', bg: tokens['--bg-primary'] },
+        { name: 'warn tile', bg: flatten(WARN_TINT, tokens['--bg-secondary']) },
+      ];
+
+      for (const s of surfaces) {
+        it(`amber text on ${s.name} meets ${AA_NORMAL_TEXT}:1`, () => {
+          expect(fg, `theme "${theme}" is missing token --ms-yellow-fg`).toBeTruthy();
+          expect(s.bg, `theme "${theme}" is missing a surface token`).toBeTruthy();
+
+          const ratio = contrastRatio(fg, s.bg);
+          expect(
+            ratio,
+            `${theme}: amber text — --ms-yellow-fg (${fg}) on ${s.name} (${s.bg}) = ` +
+              `${ratio.toFixed(2)}:1, needs >= ${AA_NORMAL_TEXT}:1`,
+          ).toBeGreaterThanOrEqual(AA_NORMAL_TEXT);
+        });
+      }
+    });
+  }
+});
+
+// ── Progress-bar fill vs track (SC 1.4.11) ───────────────────────────────────
+// .progress-fill paints a gradient between --progress-from and --progress-to
+// over the --bg-tertiary track. Both stops must clear 3:1 against the track so
+// the filled portion stays distinguishable (the mid-tone accent + purple failed
+// on the dark themes before these stops were split per theme).
+const PROGRESS_STOPS = ['--progress-from', '--progress-to'] as const;
+
+describe('WCAG 2.1 AA progress-bar fill (SC 1.4.11)', () => {
+  for (const theme of THEMES) {
+    const tokens = getThemeTokens(theme);
+
+    describe(theme, () => {
+      const track = tokens['--bg-tertiary'];
+
+      for (const stop of PROGRESS_STOPS) {
+        it(`${stop} on track meets ${AA_NON_TEXT}:1`, () => {
+          const fg = tokens[stop];
+          expect(fg, `theme "${theme}" is missing token ${stop}`).toBeTruthy();
+          expect(track, `theme "${theme}" is missing token --bg-tertiary`).toBeTruthy();
+
+          const ratio = contrastRatio(fg, track);
+          expect(
+            ratio,
+            `${theme}: progress fill — ${stop} (${fg}) on --bg-tertiary (${track}) = ` +
+              `${ratio.toFixed(2)}:1, needs >= ${AA_NON_TEXT}:1`,
+          ).toBeGreaterThanOrEqual(AA_NON_TEXT);
+        });
+      }
+    });
+  }
+});

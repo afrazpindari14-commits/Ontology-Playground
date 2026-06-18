@@ -76,6 +76,8 @@ over it).
 | Accent | `--ms-blue`, `--ms-blue-dark`, `--ms-blue-light`, `--info` | Primary accent used across buttons, links, highlights. Override these to re-brand the accent color. |
 | Accent foreground | `--on-accent` | Text/icon color placed **on** an accent-colored fill (e.g. `.btn-primary`). Must clear 4.5:1 against `--ms-blue`. White suits a dark accent; a **light** accent (e.g. Aurora's mint) needs a **dark** value. Inherited from `:root` (white) unless overridden. |
 | Stat tiles | `--stat-blue`, `--stat-green`, `--stat-purple` | Icon + value color for the Ontology-Insights metric tiles, which lay a translucent tint over `--bg-secondary`. Each must clear **3:1** against its composited tile. Dark-based themes inherit the **bright** `:root` set; light-based themes inherit the **darker** `.light-theme` set — override only if your sidebar uses an unusual background. |
+| Amber foreground | `--ms-yellow-fg` | Color for amber **text + icons** — header points/badges, quest points, the pathfinder warning, the active designer-ID toggle. As text it must clear **4.5:1**. Dark-based themes inherit the bright `:root` `#FFB900`; light-based themes inherit the darker `.light-theme` gold (`#8A6A00`), because bright amber fails (~1.7:1) on white. Distinct from the brand **fill** `--ms-yellow` (paired with black text) — don't conflate them. |
+| Progress fill | `--progress-from`, `--progress-to` | The two gradient stops of `.progress-fill`, painted over the `--bg-tertiary` track. **Both** must clear **3:1** against that track (SC 1.4.11). Bright on dark-based themes; the accent/violet pair on `.light-theme`; Aurora and Crimson override `--progress-from` to keep their signature hue. |
 | Surfaces | `--bg-primary`, `--bg-secondary`, `--bg-tertiary`, `--bg-elevated` | Page and panel backgrounds, lightest → most elevated. |
 | Text | `--text-primary`, `--text-secondary`, `--text-tertiary` | Foreground text, primary → muted. |
 | Borders | `--border-color`, `--border-subtle` | Panel/control borders. |
@@ -153,6 +155,9 @@ light) and retune. Place it after the existing theme blocks.
   --ms-blue-light: #6366F1;
   --info: #4F46E5;
   --on-accent: #FFFFFF;       /* white clears 4.5:1 on this indigo accent */
+  --ms-yellow-fg: #FFB900;    /* amber text/icons; a light theme needs ~#8A6A00 */
+  --progress-from: #818CF8;   /* both progress stops need 3:1 on --bg-tertiary */
+  --progress-to: #C4B5FD;
 
   --bg-primary: #15172B;
   --bg-secondary: #1C1F3A;
@@ -271,6 +276,13 @@ themes, so a new theme or a token tweak can't silently ship a failing color:
   `--stat-green`, `--stat-purple`) are graphical objects / large text and need
   **3:1** against the translucent tile, composited over `--bg-secondary`. Keep
   the icons at full opacity (a `0.7` fade drops them below the floor).
+- **Amber text + icons** (`--ms-yellow-fg`) — header points/badges, quest
+  points, the pathfinder warning, the active designer-ID toggle — are normal
+  text and need **4.5:1** against their surface. Bright amber only clears this
+  on dark backgrounds, so light-based themes drop it to a darker gold.
+- **Progress-bar fill** (`--progress-from`, `--progress-to`) — both gradient
+  stops are graphical objects and need **3:1** against the `--bg-tertiary`
+  track (SC 1.4.11).
 
 Thresholds are floors — `4.49:1` fails.
 

@@ -30,6 +30,13 @@
   --stat-blue: #5CB0F2;
   --stat-green: #3FB950;
   --stat-purple: #C4A2F0;
+  /* Foreground for amber icons + text. Bright amber reads on the dark surfaces
+     (dark + aurora); light themes override to a darker gold for >=4.5:1 text. */
+  --ms-yellow-fg: #FFB900;
+  /* Progress-bar fill stops — must clear 3:1 against the --bg-tertiary track
+     (SC 1.4.11). Bright on the dark track; light themes use accent + purple. */
+  --progress-from: #4DA6FF;
+  --progress-to: #B98EE6;
   
   /* Semantic Colors */
   --success: #107C10;
@@ -87,6 +94,11 @@
   --stat-blue: #0067C0;
   --stat-green: #107C10;
   --stat-purple: #7A3FBF;
+  /* Amber fails on light surfaces; a darker gold clears >=4.5:1 on white. */
+  --ms-yellow-fg: #8A6A00;
+  /* Light track is pale, so the accent + purple already clear 3:1. */
+  --progress-from: #0078D4;
+  --progress-to: #5C2D91;
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
@@ -112,6 +124,8 @@
   --ms-blue-light: #3FD0B4;
   --info: #2AAA92;
   --ms-cyan: #6AD6F9;
+  /* Keep the mint accent as the progress-bar start (clears 3:1 on the track). */
+  --progress-from: #2AAA92;
 
   --bg-primary: #0E2B27;
   --bg-secondary: #14352F;
@@ -146,6 +160,8 @@
   --ms-blue-dark: #A8001F;
   --ms-blue-light: #E63956;
   --info: #D6002A;
+  /* Crimson accent as the progress-bar start (clears 3:1 on the light track). */
+  --progress-from: #D6002A;
 
   --bg-primary: #F8F9FA;
   --bg-secondary: #FFFFFF;
@@ -357,7 +373,7 @@ body {
 
 .stat-value {
   font-weight: 600;
-  color: var(--ms-yellow);
+  color: var(--ms-yellow-fg);
 }
 
 .header-actions {
@@ -542,7 +558,7 @@ body {
 }
 
 .quest-points {
-  color: var(--ms-yellow);
+  color: var(--ms-yellow-fg);
   font-weight: 600;
 }
 
@@ -582,7 +598,7 @@ body {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--ms-blue), var(--ms-purple));
+  background: linear-gradient(90deg, var(--progress-from), var(--progress-to));
   transition: width var(--transition-normal);
 }
 
@@ -2470,8 +2486,8 @@ body {
   transition: all var(--transition-fast);
 }
 .designer-id-btn.active {
-  color: var(--ms-yellow);
-  border-color: var(--ms-yellow);
+  color: var(--ms-yellow-fg);
+  border-color: var(--ms-yellow-fg);
   background: rgba(255, 185, 0, 0.1);
 }
 
@@ -3848,142 +3864,6 @@ body {
   letter-spacing: 0.4px;
 }
 
-/* Connectivity progress bar */
-.stats-metric {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.stats-metric-header {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.stats-metric-header svg {
-  flex-shrink: 0;
-  color: var(--ms-yellow);
-}
-
-.stats-metric-value {
-  margin-left: auto;
-  font-weight: 600;
-  color: var(--ms-yellow);
-}
-
-.stats-progress-track {
-  height: 5px;
-  background: var(--bg-tertiary);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.stats-progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--ms-blue), var(--ms-purple));
-  border-radius: 3px;
-  transition: width var(--transition-normal);
-}
-
-/* Highlight rows (most connected, avg properties) */
-.stats-highlight {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-secondary);
-  padding: 5px 8px;
-  background: var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-}
-
-.stats-highlight svg {
-  flex-shrink: 0;
-  color: var(--ms-yellow);
-}
-
-.stats-highlight-label {
-  flex-shrink: 0;
-}
-
-.stats-highlight-value {
-  margin-left: auto;
-  font-weight: 600;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.stats-highlight-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ms-blue);
-  color: var(--on-accent);
-  font-size: 10px;
-  font-weight: 700;
-  border-radius: 10px;
-  padding: 1px 6px;
-  min-width: 20px;
-}
-
-/* Property type distribution */
-.stats-type-dist {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.stats-type-dist-title {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 2px;
-}
-
-.stats-type-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-}
-
-.stats-type-name {
-  width: 55px;
-  flex-shrink: 0;
-  color: var(--text-secondary);
-  text-transform: capitalize;
-}
-
-.stats-type-bar-track {
-  flex: 1;
-  height: 4px;
-  background: var(--bg-tertiary);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.stats-type-bar-fill {
-  height: 100%;
-  background: var(--ms-blue);
-  border-radius: 2px;
-  min-width: 2px;
-  transition: width var(--transition-normal);
-}
-
-.stats-type-count {
-  width: 20px;
-  text-align: right;
-  color: var(--text-tertiary);
-  flex-shrink: 0;
-}
-
 /* Light theme adjustments for stat cards */
 .light-theme .stat-card--blue {
   background: rgba(0, 120, 212, 0.08);
@@ -3993,9 +3873,6 @@ body {
 }
 .light-theme .stat-card--green {
   background: rgba(16, 124, 16, 0.08);
-}
-.light-theme .stats-highlight {
-  background: var(--bg-tertiary);
 }
 
 .command-palette-input {
@@ -4596,7 +4473,7 @@ body {
 .pathfinder-message--warn {
   background: rgba(255, 185, 0, 0.1);
   border: 1px solid rgba(255, 185, 0, 0.3);
-  color: var(--ms-yellow);
+  color: var(--ms-yellow-fg);
 }
 
 /* Result chain */
