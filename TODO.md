@@ -252,6 +252,9 @@ These enhance the overall experience for a community learning resource.
 - [ ] Useful for reviewing community PRs or comparing versions
 
 ### 5.3 Accessibility & responsive design
+- [x] WCAG 2.1 AA color contrast: audited all four themes, fixed failing text and
+      graph tokens, added `--on-accent` / `--graph-edge-label-bg`, and wired an
+      automated contrast gate (`npm run test:a11y`) into CI
 - [ ] Audit and fix keyboard navigation across all modals and panels
 - [ ] Add ARIA labels to the graph visualization
 - [ ] Ensure the app is usable on tablet-sized screens (responsive breakpoints)

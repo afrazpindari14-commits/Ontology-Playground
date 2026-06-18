@@ -74,11 +74,12 @@ over it).
 | Group | Tokens | Notes |
 | --- | --- | --- |
 | Accent | `--ms-blue`, `--ms-blue-dark`, `--ms-blue-light`, `--info` | Primary accent used across buttons, links, highlights. Override these to re-brand the accent color. |
+| Accent foreground | `--on-accent` | Text/icon color placed **on** an accent-colored fill (e.g. `.btn-primary`). Must clear 4.5:1 against `--ms-blue`. White suits a dark accent; a **light** accent (e.g. Aurora's mint) needs a **dark** value. Inherited from `:root` (white) unless overridden. |
 | Surfaces | `--bg-primary`, `--bg-secondary`, `--bg-tertiary`, `--bg-elevated` | Page and panel backgrounds, lightest → most elevated. |
 | Text | `--text-primary`, `--text-secondary`, `--text-tertiary` | Foreground text, primary → muted. |
 | Borders | `--border-color`, `--border-subtle` | Panel/control borders. |
 | Shadow | `--shadow-glow` | Accent glow; tint it to match the accent. |
-| Graph | `--graph-bg`, `--graph-node-text`, `--graph-edge-color`, `--graph-edge-text` | Read at runtime by the graph + designer preview. **Tune these for contrast against `--graph-bg`.** |
+| Graph | `--graph-bg`, `--graph-node-text`, `--graph-edge-color`, `--graph-edge-text`, `--graph-edge-label-bg` | Read at runtime by the graph + designer preview. `--graph-edge-label-bg` is the **opaque** chip behind edge labels; edge text must clear 4.5:1 against it. **Tune all of these for contrast** — see [Accessibility](#accessibility-wcag-21-aa-contrast). |
 | Canvas checker | `--chess-square-dark`, `--chess-square-light` | The graph canvas backdrop pattern. `--chess-square-light` is the **solid base** — see [Gotcha 1](#gotcha-1-the-body-stays-dark). |
 | About links | `--about-link-color`, `--about-link-hover-color` | Links on the About screen. |
 
@@ -146,10 +147,11 @@ light) and retune. Place it after the existing theme blocks.
 ```css
 /* Indigo theme — deep indigo base with violet accents (dark) */
 .theme-indigo {
-  --ms-blue: #6366F1;
-  --ms-blue-dark: #4F46E5;
-  --ms-blue-light: #818CF8;
-  --info: #6366F1;
+  --ms-blue: #4F46E5;
+  --ms-blue-dark: #4338CA;
+  --ms-blue-light: #6366F1;
+  --info: #4F46E5;
+  --on-accent: #FFFFFF;       /* white clears 4.5:1 on this indigo accent */
 
   --bg-primary: #15172B;
   --bg-secondary: #1C1F3A;
@@ -165,8 +167,9 @@ light) and retune. Place it after the existing theme blocks.
 
   --graph-bg: #14162A;
   --graph-node-text: #CDD2FF;
-  --graph-edge-color: #5A5FA0;
+  --graph-edge-color: #686DAE;
   --graph-edge-text: #9AA0D6;
+  --graph-edge-label-bg: #181A2E;   /* opaque chip behind edge labels */
 
   --chess-square-dark: rgba(40, 44, 90, 0.85);
   --chess-square-light: rgba(30, 33, 70, 0.65);
@@ -227,10 +230,12 @@ already dark.
 ### Gotcha 2: graph colors come from CSS, not props
 
 `OntologyGraph` and the designer's `GraphPreview` read `--graph-node-text`,
-`--graph-edge-color`, and `--graph-edge-text` from `getComputedStyle` and
-re-read them when the active `theme` changes. So **defining the `--graph-*`
-tokens in your theme block is all you need** — no component or TypeScript edits.
-Tune them for contrast against your `--graph-bg`.
+`--graph-edge-color`, `--graph-edge-text`, and `--graph-edge-label-bg` from
+`getComputedStyle` and re-read them when the active `theme` changes. So
+**defining the `--graph-*` tokens in your theme block is all you need** — no
+component or TypeScript edits. Tune them for contrast against your `--graph-bg`
+(and edge text against `--graph-edge-label-bg`); see
+[Accessibility](#accessibility-wcag-21-aa-contrast).
 
 ### Gotcha 3: register dark-based themes in `DARK_BASED_THEMES`
 
@@ -244,6 +249,44 @@ will briefly fall back to light defaults and labels can get a light backplate.
 Returning `'light-theme theme-<id>'` from `themeClass` lets your block inherit
 every light token and override only what's distinctive. Returning a single class
 means you must re-specify the full token set or inherit Dark defaults by mistake.
+
+---
+
+## Accessibility (WCAG 2.1 AA contrast)
+
+Every theme must meet **WCAG 2.1 Level AA** contrast — the standard Microsoft's
+Accessibility Insights verifies. A deterministic test enforces it for **all**
+themes, so a new theme or a token tweak can't silently ship a failing color:
+
+- **Body text** (`--text-primary`, `--text-secondary`) and **muted text**
+  (`--text-tertiary`) need **4.5:1** against the surfaces they sit on
+  (`--bg-primary`, `--bg-secondary`, `--bg-elevated`).
+- **Accent button labels** (`--on-accent`) need **4.5:1** against `--ms-blue`.
+- **Graph labels** need **4.5:1** — node text against `--graph-bg`, edge text
+  against the opaque `--graph-edge-label-bg` chip.
+- **Graph edge lines** (`--graph-edge-color`) are graphical objects and need
+  **3:1** against `--graph-bg` (SC 1.4.11 Non-text Contrast).
+
+Thresholds are floors — `4.49:1` fails.
+
+### Run it
+
+```bash
+npm run test:a11y
+```
+
+The suite ([`src/a11y/themeContrast.test.ts`](../src/a11y/themeContrast.test.ts))
+parses [`src/styles/app.css`](../src/styles/app.css), resolves each theme's
+tokens, and asserts every text/non-text pair clears its threshold. It runs in CI
+(the **“Accessibility — WCAG 2.1 AA contrast”** step) and inside `npm test`, so a
+regression fails the build. A failure prints the exact ratio and both tokens, e.g.
+`--text-tertiary (#808080) on --bg-secondary (#2D2D2D) = 3.49:1, needs >= 4.5:1`.
+Nudge the failing token lighter/darker until it clears, then re-run.
+
+> **Light accents need dark label text.** White on a light accent fails AA
+> (Aurora's mint `#2AAA92` + white = 2.89:1). That's what `--on-accent` is for:
+> set it dark for a light accent (Aurora uses `#08221D`), white for a dark
+> accent. Accent-filled controls use `color: var(--on-accent)`.
 
 ---
 
@@ -264,10 +307,12 @@ Check, in the new theme:
       selection.
 - [ ] **Persistence**: reload the page — the theme is remembered.
 - [ ] **No regressions**: Dark, Light, Aurora, and Crimson still look correct.
+- [ ] **Contrast**: `npm run test:a11y` is green for the new theme (WCAG 2.1 AA).
 
 Then:
 
 ```bash
+npm run test:a11y    # WCAG 2.1 AA contrast for every theme (also runs in CI)
 npx tsc --noEmit     # type-check (the ThemeId union change is covered here)
 npm run build        # full production build
 ```

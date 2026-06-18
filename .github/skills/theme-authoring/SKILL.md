@@ -50,8 +50,13 @@ Make all edits in [`src/store/appStore.ts`](../../../src/store/appStore.ts) and
   the dark body bleed through → dark canvas + unreadable labels. Use an opaque
   light color (e.g. `#FBF7F8`), not `rgba(..., 0.03)`. (Guide → Gotcha 1.)
 - **Graph colors are CSS-driven.** Define `--graph-bg`, `--graph-node-text`,
-  `--graph-edge-color`, `--graph-edge-text` in the block; the graph and designer
-  read them at runtime. No `.tsx` edits. Tune for contrast against `--graph-bg`.
+  `--graph-edge-color`, `--graph-edge-text`, `--graph-edge-label-bg` in the
+  block; the graph and designer read them at runtime. No `.tsx` edits.
+- **Meet WCAG 2.1 AA contrast.** Text and labels need 4.5:1; graph edge lines and
+  other non-text need 3:1. Set `--on-accent` (label color on accent fills) to a
+  **dark** value for a **light** accent (white fails on Aurora's mint) and white
+  for a dark accent. Edge text must clear 4.5:1 against `--graph-edge-label-bg`.
+  `npm run test:a11y` enforces this for every theme. (Guide → Accessibility.)
 - **Register dark themes** in `DARK_BASED_THEMES` so `darkMode` is correct
   (graph fallback, label backplate, PNG export bg).
 - **Don't introduce brand names** in ids, labels, comments, or commits. Use
@@ -66,6 +71,7 @@ If any example data, docs, or sample instances need person names, use the
 
 ```bash
 npm run dev          # switch to the theme in the header; check graph, designer, learn pages
+npm run test:a11y    # WCAG 2.1 AA contrast for every theme (also a CI gate)
 npx tsc --noEmit     # the ThemeId union change is type-checked here
 npm run build        # full build
 ```
@@ -80,4 +86,5 @@ If `npm run build` only changed `public/learn.json` (a timestamp), revert it:
 - Main graph, designer preview, and learn pages are legible in the new theme;
   the graph canvas backdrop matches the theme (Gotcha 1 satisfied).
 - Dark, Light, Aurora, Crimson unchanged.
+- `npm run test:a11y` passes (WCAG 2.1 AA contrast for the new theme).
 - `tsc --noEmit` and `npm run build` pass; no brand references introduced.
